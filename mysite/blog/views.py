@@ -1,13 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import (TemplateView, ListView,
                                   DetailView, CreateView,
                                   UpdateView, DeleteView)
 from blog.models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin # Class needed in Class Based Views
-# from django.contrib.auth.decorators import login_required # decorator needed in Function Based Views
+from django.contrib.auth.decorators import login_required # decorator needed in Function Based Views
 from blog.forms import PostForm, CommentForm
 from django.urls import reverse_lazy # waits to show the successfully deleted page until it is actually deleted
-
+from django.utils import timezone
 
 
 class PostListView(ListView):
@@ -70,3 +70,46 @@ class DraftListView(LoginRequiredMixin, ListView):
         """In this case, we want to show all existing posts, not only the published ones
         """        
         return Post.objects.filter(published_date__isnull=True).order_by("-created_date")
+
+
+########################
+# FUNCTIONAL VIEWS #
+########################
+
+# Comments Views (functional instead of Class Based View):
+
+@login_required # convenience decorator to make login required for the view below (imported above)
+def add_comment_to_post(request, pk): # pk links the comment to the post
+    post = get_object_or_404(Post, pk=pk)
+    if request.method =="POST": # if the form has been filled
+        form = CommentForm(request.POST) # then pass the request
+        if form.isvalid(): # if the form is valid and nothing is messed up
+            comment = form.save(commit=False)
+            comment.post = post # post is am attribute in the Comment class in our model
+            comment.save()
+            return redirect("post_detail", pk=post.pk)
+    else:
+        form = CommentForm()
+    return render(request, "blog/comment_form.html", {"form":form})
+
+@login_required
+def comment_approve(request,pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.approve() # method of the Comment model
+    return redirect("post_detail", pk=comment.post.pk)
+
+@login_required
+def comment_remove(request,pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post_pk = comment.post.pk # as it is going to be deleted, we need to save it as a sepparate variable
+    comment.delete()
+    return redirect("post_detail", pk=post_pk)
+
+
+# Publishing functional View
+
+@login_required
+def post_publish(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.publish
+    return redirect("post_detail", pk=pk)
