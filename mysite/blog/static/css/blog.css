@@ -12,6 +12,12 @@
 
 }
 
+/* Formatting to set the margins (used in Post List page) */
+.centerstage {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 /* Taken from https://codepen.io/thapliyalshivam/pen/dvgXVO with some simplifications */
 /* Only interested in part of the functionality */
