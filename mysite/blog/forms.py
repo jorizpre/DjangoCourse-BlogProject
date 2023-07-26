@@ -1,7 +1,7 @@
 from django import forms
 from blog.models import Post, Comment # importing the created models
 
-class PostForm(froms.ModelForm):
+class PostForm(forms.ModelForm):
     
     class Meta():
         """Class to be used to create widget-specific properties
@@ -18,7 +18,8 @@ class PostForm(froms.ModelForm):
 class CommentForm(forms.ModelForm):
 
     class Meta():
-        model = Commentfields = ("author", "text")
+        model = Comment
+        fields = ("author", "text")
 
         widgets={
             "author":forms.TextInput(attrs={"class":"textinputclass"}),

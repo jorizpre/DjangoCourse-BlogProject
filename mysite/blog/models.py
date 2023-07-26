@@ -1,13 +1,13 @@
 from django.db import models
 from django.utils import timezone
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 
 class Post(models.Model):
-    author = models.ForeignKey('auth.User') # the authors will be the superusers (we will change that later for a multiuser approach)
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE) # the authors will be the superusers (we will change that later for a multiuser approach)
     title = models.CharField(max_length=200)
     text = models.TextField()
-    create_date = models.DateTimeField(default=timezone.now())
+    create_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True,null=True) # can be left blank or chosen as null (no publication date whatsoever)
 
     def publish(self):
@@ -32,13 +32,13 @@ class Post(models.Model):
         """        
         return self.title
 
-class Comment(model.Model):
+class Comment(models.Model):
     """
     """
-    post = models.ForeignKey("blog.Post", related_name="comments") # to link each comment to a post
+    post = models.ForeignKey("blog.Post", on_delete=models.CASCADE, related_name="comments") # to link each comment to a post
     author = models.CharField(max_length=200) # free input (no user required)
     text = models.TextField()
-    create_date = models.DateTimeField(default=timezone.now())
+    create_date = models.DateTimeField(default=timezone.now)
     approved_comment = models.BooleanField(default=False)
     
     def approve(self):

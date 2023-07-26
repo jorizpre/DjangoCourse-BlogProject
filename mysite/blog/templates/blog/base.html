@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load staticfiles %} <!-- to reference static CSS files (such as the blog.css file under blog-static-css) -->
+{% load static %} <!-- to reference static CSS files (such as the blog.css file under blog-static-css) -->
 
 <head>
     <meta charset="UTF-8">
@@ -7,8 +7,15 @@
     <title>Blog</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- The linkg below is not working somehow, but it is supposed to be the latest version   -->
+    <!-- It was taken from: https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
+    <!-- Instead, I copy-pasted the exact links that he uses, and they work well -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <!-- Taken from: https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
 
     <!-- Medium Style Editor -->
@@ -28,14 +35,14 @@
 
 </head>
 
-<body>
+<body class="loader">
     <!-- Navigation Bar (NAVBAR) -->
-    <nav> class="navbar navbar-default techfont custom-navbar">
+    <nav class="navbar navbar-default techfont custom-navbar">
         <!-- techfont links to the static css file, in order to be able to edit the font of the NAVBAR -->
         <div class="container">
             <!-- Content in the Left Hand Side -->
             <ul class="nav navbar-nav">
-                <li><a class="navbar-brand bigbrand" href="{% url post_list %}">My Blog</a></li>
+                <li><a class="navbar-brand bigbrand" href="{% url 'post_list' %}">My Blog</a></li>
                 <li><a href="{% url 'about' %}">About</a></li>
                 <li><a href="https://www.github.com">Github</a></li>
                 <li><a href="https://www.linkedin.com">LinkedIn</a></li>
@@ -46,7 +53,7 @@
                 <li><a href="{% url 'post_new' %}">New Post</a></li>
                 <li><a href="{% url 'post_draft_list' %}">Drafts</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>
-                <li><a>Welcome {% {user.username} %}</a></li>
+                <li><a>Welcome {{ user.username }}</a></li>
                 {% else %} <!-- if user is not authenticated -->
                 <li>
                     <a class="nav navbar-right" href="{url 'login'}"><span class="glyphicon glyphicon-user"></span></a>
